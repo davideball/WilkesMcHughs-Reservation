@@ -110,6 +110,7 @@ var NewReservation = function () {
 var ListReservations = function (listType) {
     var allReservations = GetData(ReservationKey);
     var sortedReservations = SortListDate(allReservations);
+    var todaysSeatCount = 0;
 
     if (sortedReservations !== null) {
         divReservations.empty(); // Empty the html control
@@ -136,6 +137,7 @@ var ListReservations = function (listType) {
                             container = ReservationHtml(_reservation.id, Get12HourTime(_reservation.datetime), _reservation.name, _reservation.seats);
                             divReservations.append(container);
                             hasData = true;
+                            todaysSeatCount += Number(_reservation.seats);                           
                         }
                         break;
                     case "week":                        
@@ -169,7 +171,13 @@ var ListReservations = function (listType) {
             ReservationHeader.addClass("hidden");
         }
         else
+        {
             ReservationHeader.removeClass("hidden");
+        }
+        if (todaysSeatCount > 0)
+            h4Seats.text(h4Seats.text() + '(' + todaysSeatCount + ')');
+        else
+            h4Seats.text("Seats");
     }
 }
 
@@ -628,6 +636,7 @@ var dateIsValidReg = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
 var timePiece = ':00.000Z';
 
 /* jQuery Objects  */
+var h4Seats = $("#h4Seats");
 var DateTime = $("#DateTime");
 var NewReservationBtn = $("#NewReservation");
 var divReservations = $("#divReservations");
