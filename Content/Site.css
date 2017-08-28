@@ -1,0 +1,79 @@
+﻿/* Html tags*/
+body {
+    margin-top: 20px;
+    max-width: 900px;
+    /*background-image: url('../images/bgFadeBlue.jpg');*/
+}
+td {
+    max-height: 20px;
+}
+.noPaddingMargins {
+    padding: 0px;
+    margin: 0px;
+}
+.minHeight30 {
+    min-height: 41px;
+}
+.removeLeftBorder{
+    border-left: none;
+}
+.removeRightBorder {
+    border-right: none;
+}
+.paddingLeft50 {
+    padding-left: 50px;
+}
+/* Classes */
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+.hidden {
+    display: none;
+}
+.block {
+    display: block;
+}
+.maxWidth70 {
+    max-width: 70px
+}
+.maxWidth50 {
+    max-width: 50px
+}
+.maxWidth30 {
+    max-width: 30px
+}
+.margin0 {
+    margin: 0px;
+}
+.margin5 {
+    margin: 5px;
+}
+.paddingLeft10 {
+    padding-left: 10px;
+}
+.boldText {
+    font-weight: bold;
+}
+.warning {
+    border: solid 1px red;
+}
+.fixedNavbar {
+    padding-top: 15px;
+    overflow: hidden;
+    background-color: #ffffff;
+    position: fixed;
+    top: 0px;
+    max-width: 900px;
+    z-index: 1;
+}
+.main {
+    margin-top: 75px;
+}

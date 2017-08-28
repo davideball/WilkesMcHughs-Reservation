@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>  
+    <link href="Content/jquery-ui.css" rel="stylesheet" />
+    <link href="Content/jquery-ui.structure.css" rel="stylesheet" />
+    <link href="Content/jquery-ui.theme.css" rel="stylesheet" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <title>Reservations</title>
+</head>
+<body>   
+    <div> <!--class="navbar"-->
+        <div class="col-xs-12 fixedNavbar" id="Title">
+            <div class="col-xs-2"><input type="button" value="New Reservation" class="ui-button ui-widget ui-corner-all" id="NewReservation" /></div>
+            <div class="col-xs-1"><h4>&nbsp;</h4></div>
+            <div class="col-xs-7 text-center">
+                <label for="radioDay">Today</label>
+                <input type="radio" value="day" name="radioDate" id="radioDay" checked="checked" onchange="ListReservations($(this).val())" />
+                <label for="radioWeek">7 days</label>
+                <input type="radio" value="week" name="radioDate" id="radioWeek" onchange="ListReservations($(this).val())" />
+                <label for="radioMonth">30 days</label>
+                <input type="radio" value="month" name="radioDate" id="radioMonth" onchange="ListReservations($(this).val())" />
+                <label for="radioAll">All</label>
+                <input type="radio" value="all" name="radioDate" id="radioAll" onchange="ListReservations($(this).val())" />
+            </div>
+            <div class="col-xs-2 text-center"><h4 id="DateTime">DateTime</h4></div>
+        </div>
+        <div class="main">
+            <div id="ReservationHeader" class="col-xs-12 text-center">
+                <div class="col-xs-1"><h4 class="paddingLeft10">Fill</h4></div>
+                <div class="col-xs-2"><h4>Seats</h4></div>
+                <div class="col-xs-2"><h4>Time</h4></div>
+                <div class="col-xs-5"><h4>Name</h4></div>
+                <div class="col-xs-2"><h4>&nbsp;</h4></div>
+            </div>
+            <div style="padding: 15px;">
+                <table class="col-xs-12" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td>
+                            <div id="divReservations" class="col-xs-12"></div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="fulfilledAccordion" class="col-xs-12">
+                    <h3>Fulfilled Reservations</h3>
+                    <div id="divFulfilled" class="noPaddingMargins"></div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div id="divReservation" class="form-group hidden">
+        <div class="col-xs-12">
+            <label class="" for="Name">Name</label>
+            <input id="Name" type="text" placeholder="Name" required alt="Name" class="form-control keyup-stringlength change-stringlength" maxlength="20" />
+        </div>
+        <div class="col-xs-12">
+            <label class="" for="Date">Date</label>
+            <input id="Date" type="text" placeholder="Date" required alt="Date" class="form-control keyup-stringlength change-stringlength" />
+        </div>
+        <div class="col-xs-12">
+            <label class="" for="">Time</label>
+        </div>
+        <div class="col-xs-12">
+            <input id="Hours" required alt="Time" class="form-control maxWidth50 keyup-numeric" placeholder="H" />
+            <input id="Minutes" required alt="Time" class="form-control maxWidth50 keyup-numeric" placeholder="M" />
+            <input id="AmPm" class="form-control maxWidth50 keyup-no-numeric" placeholder="A/P" />
+        </div>
+        <div class="col-xs-12">
+            <label class="" for="Seats">Number seats</label>
+            <input id="Seats" type="text" placeholder="Number seats" required alt="Seats" class="form-control keyup-numeric" />
+        </div>
+    </div>
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-ui.js"></script>
+    <script src="Scripts/respond.min.js"></script>
+    <script src="Scripts/Site.js"></script>
+</body>
+</html>
