@@ -128,7 +128,8 @@ var ListReservations = function (listType) {
             var secondsMonth = (30 * 24 * 60 * 60 * 1000);
             var container;
 
-            if (!_reservation.seated) {                
+            if (!_reservation.seated) { 
+                var formattedYYYMMDDTHHMMTT = FormatTime(_reservation.datetime);
                 switch (listType) {
                     case "day":
                         if (reservationDate.toDateString() == date.toDateString()) {
@@ -139,20 +140,21 @@ var ListReservations = function (listType) {
                         break;
                     case "week":                        
                         if (reservationDate <= new Date(date.getTime() + secondsWeek)) {
-                            container = ReservationHtml(_reservation.id, FormatTime(_reservation.datetime), _reservation.name, _reservation.seats);
+                            container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
                             divReservations.append(container);
                             hasData = true;
                         }
                         break;
                     case "month":
                         if (reservationDate <= new Date(date.getTime() + secondsMonth)) {
-                            container = ReservationHtml(_reservation.id, FormatTime(_reservation.datetime), _reservation.name, _reservation.seats);
+
+                            container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
                             divReservations.append(container);  
                             hasData = true;
                         }
                         break;
                     case "all":
-                        container = ReservationHtml(_reservation.id, FormatTime(_reservation.datetime), _reservation.name, _reservation.seats);
+                        container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
                         divReservations.append(container);
                         hasData = true;
                         break;
@@ -197,7 +199,7 @@ var ListFulfilled = function () {
                     return filfilled;
             });
 
-            if (_filfilled.seated) {
+            if (_filfilled.seated && FormatTime(_filfilled.datetime)) {
                 var container = FulfilmentHtml(_filfilled.id, _filfilled.seats, FormatTime(_filfilled.datetime), _filfilled.name);
                 divFulfilled.append(container);
             }
@@ -234,6 +236,7 @@ var CancelReservation = function (id) {
             {
                 var _filteredAry = allReservations.splice(i, 1);
                 PostData(ReservationKey, allReservations);
+                SelectedTimeFrame = $(":radio:checked");
                 ListReservations(SelectedTimeFrame.val());
             }               
             else
@@ -430,7 +433,7 @@ function Get12HourTime(datetime) {
 }
 
 var IsDateTimeValid = function (dateTime) {
-    var matches = dateTime.match(/^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/);
+    var matches = dateTime.match(dateIsValidReg);
 
     if (!matches === null) {
         // now lets check the date sanity
@@ -453,6 +456,7 @@ var IsDateTimeValid = function (dateTime) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -619,6 +623,8 @@ var headerEmpty = "<div class='col-xs-1'><h5 class='boldText'>&nbsp;</h5></div>"
 
 var characterReg = /^\s*[a-zA-Z0-9,\s]+\s*$/;
 var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+var dateLongStringReg = /^(19|20)\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/; 
+var dateIsValidReg = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
 var timePiece = ':00.000Z';
 
 /* jQuery Objects  */
