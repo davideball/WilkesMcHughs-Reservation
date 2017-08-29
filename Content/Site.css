@@ -1,8 +1,51 @@
-﻿/* Html tags*/
+﻿/* Extra small devices (phones, up to 480px) */
+@media (min-width: 825px) and (max-width: 870px) {
+    .ui-widget {
+        font-size: 0.9em;
+    }
+}
+@media screen and (max-width: 825px) {
+    h4 {
+        font-size: 1.1em;
+    }
+
+    .ui-widget {
+        font-size: 0.9em;
+    }
+}
+@media (min-width: 685px) and (max-width: 825px) {
+    .ui-widget {
+        font-size: 0.85em;
+    }
+}
+@media (min-width: 645px) and (max-width: 745px) {
+    h4 {
+        font-size: 1.0em;
+    }
+    .ui-widget {
+        font-size: 0.79em;
+    }
+}
+@media (max-width: 645px) {
+    h4 {
+        font-size: 0.9em;
+    }
+    .ui-widget {
+        font-size: 0.79em;
+    }
+    .btn {
+        font-size: 0.85em;
+    }
+}
+@media (max-width: 640px) {
+    h5 {
+        font-size: 0.9em;
+    }
+}
 body {
     margin-top: 20px;
     max-width: 900px;
-    /*background-image: url('../images/bgFadeBlue.jpg');*/
+    min-width: 600px;   
 }
 td {
     max-height: 20px;
@@ -72,8 +115,12 @@ td {
     position: fixed;
     top: 0px;
     max-width: 900px;
+    min-width: 600px;
     z-index: 1;
 }
 .main {
     margin-top: 75px;
+}
+#Seats {
+    min-width: 245px;
 }
