@@ -64,15 +64,15 @@ $(document).ready(function () {
 /* INFRASTRUCTURE */
 var GetCurrentRId = function () {
     var id = GetData(ReservationIdKey);
-    return (id !== null) ? id.RId : 1;
-}
+    return id !== null ? id.RId : 1;
+};
 
 var CreateNewRId = function (rId) {
-    var id = (Number(rId));
+    var id = Number(rId);
     ++id;
     PostData(ReservationIdKey, { RId: id });
     return id;
-}
+};
 
 var NewReservation = function () {
     var self = $(this);
@@ -82,7 +82,7 @@ var NewReservation = function () {
     divReservation.dialog(
         {
             minWidth: 350,
-            title: "New Reservation",
+            title: NewReservationLabel,
             modal: true,
             buttons: [
                 {
@@ -90,8 +90,7 @@ var NewReservation = function () {
                     click: function () {
                         // Validation
                         var isValid = IsReservationValid();
-                        if (isValid)
-                        {
+                        if (isValid) {
                             var dateString = FormatDateYMDT(rDate.val(), Hours.val(), Minutes.val(), AmPm.val());
                             CreateReservation(new Date(dateString), Seats.val(), Name.val());
                             SelectedTimeFrame = $(":radio:checked");
@@ -105,7 +104,7 @@ var NewReservation = function () {
                 }
             ]
         });
-}
+};
 
 var ListReservations = function (listType) {
     var allReservations = GetData(ReservationKey);
@@ -117,7 +116,7 @@ var ListReservations = function (listType) {
 
         var hasData = false;
         for (var i = 0; sortedReservations.length > i; i++) {
-            
+
             var _reservation = allReservations.find(function (reservation) {
                 if (reservation.id === sortedReservations[i][1])
                     return reservation;
@@ -125,38 +124,35 @@ var ListReservations = function (listType) {
 
             var reservationDate = new Date(_reservation.datetime);
             var date = new Date();
-            var secondsWeek = (7 * 24 * 60 * 60 * 1000);
-            var secondsMonth = (30 * 24 * 60 * 60 * 1000);
-            var container;
+            //var container;
 
-            if (!_reservation.seated) { 
+            if (!_reservation.seated) {
                 var formattedYYYMMDDTHHMMTT = FormatTime(_reservation.datetime);
                 switch (listType) {
                     case "day":
-                        if (reservationDate.toDateString() == date.toDateString()) {
-                            container = ReservationHtml(_reservation.id, Get12HourTime(_reservation.datetime), _reservation.name, _reservation.seats);
+                        if (reservationDate.toDateString() === date.toDateString()) {
+                            var container = ReservationHtml(_reservation.id, Get12HourTime(_reservation.datetime), _reservation.name, _reservation.seats);
                             divReservations.append(container);
                             hasData = true;
-                            todaysSeatCount += Number(_reservation.seats);                           
+                            todaysSeatCount += Number(_reservation.seats);
                         }
                         break;
-                    case "week":                        
+                    case "week":
                         if (reservationDate <= new Date(date.getTime() + secondsWeek)) {
-                            container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                            var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
                             divReservations.append(container);
                             hasData = true;
                         }
                         break;
                     case "month":
                         if (reservationDate <= new Date(date.getTime() + secondsMonth)) {
-
-                            container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
-                            divReservations.append(container);  
+                            var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                            divReservations.append(container);
                             hasData = true;
                         }
                         break;
                     case "all":
-                        container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                        var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
                         divReservations.append(container);
                         hasData = true;
                         break;
@@ -165,21 +161,16 @@ var ListReservations = function (listType) {
             }
         }
 
-        if (!hasData)
-        {
+        if (!hasData) {
             divReservations.append(noDataFound);
             ReservationHeader.addClass("hidden");
         }
-        else
-        {
+        else 
             ReservationHeader.removeClass("hidden");
-        }
-        if (todaysSeatCount > 0)
-            h4Seats.text(h4Seats.text() + '(' + todaysSeatCount + ')');
-        else
-            h4Seats.text("Seats");
+
+        todaysSeatCount > 0 ? h4Seats.text("Seats (" + todaysSeatCount + ")") : h4Seats.text("Seats");
     }
-}
+};
 
 var ListFulfilled = function () {
     var _allFulFilled = GetData(FulfilledKey);
@@ -189,7 +180,7 @@ var ListFulfilled = function () {
         fulfilledAccordion.addClass("block");
 
         var header = $('<div/>', {
-            "class": 'col-xs-12 text-center boldText'
+            "class": FilContainer
         });
 
         header.append(headerSeated);
@@ -203,7 +194,7 @@ var ListFulfilled = function () {
         for (var i = 0; _allFulFilled.length > i; i++) {
 
             var _filfilled = _allFulFilled.find(function (filfilled) {
-                if (filfilled.id === sortedFilled[i][1])
+                if (filfilled.id == sortedFilled[i][1])
                     return filfilled;
             });
 
@@ -221,43 +212,42 @@ var ListFulfilled = function () {
     }
     else
         fulfilledAccordion.css('display', 'none');
-}
+};
 
 /* WORKFLOW */
 var CreateReservation = function (dateTime, seats, name) {
     ReservationId = CreateNewRId(GetCurrentRId());
     var jsonDT = dateTime.toJSON();
-    var reservation = { id: ReservationId, datetime: jsonDT, seats: Number(seats), name: name, seated: false }
+    var reservation = { id: ReservationId, datetime: jsonDT, seats: Number(seats), name: name, seated: false };
 
     PostArrayData(ReservationKey, reservation);
     SelectedTimeFrame = $(":radio:checked");
     ListReservations(SelectedTimeFrame.val());
-}
+};
 
-var CancelReservation = function (id) {    
+var CancelReservation = function (id) {
     var allReservations = GetData(ReservationKey);
 
     for (var i = allReservations.length - 1; i >= 0; i--) {
-        if (allReservations[i].id == id) {
+        if (allReservations[i].id === id) {
             var cancelConfirmed = confirm("Cancel reservation for " + allReservations[i].name + "?");
-            if (cancelConfirmed)
-            {
+            if (cancelConfirmed) {
                 var _filteredAry = allReservations.splice(i, 1);
                 PostData(ReservationKey, allReservations);
                 SelectedTimeFrame = $(":radio:checked");
                 ListReservations(SelectedTimeFrame.val());
-            }               
+            }
             else
                 return false;
         }
-    }   
-}
+    }
+};
 
 var DeleteReservation = function (id) {
     var allFulFillments = GetData(FulfilledKey);
 
     for (var i = allFulFillments.length - 1; i >= 0; i--) {
-        if (allFulFillments[i].id == id) {
+        if (allFulFillments[i].id === id) {
             var cancelConfirmed = confirm("Delete fulfilled reservation for " + allFulFillments[i].name + "?");
             if (cancelConfirmed) {
                 var _filteredAry = allFulFillments.splice(i, 1);
@@ -268,13 +258,13 @@ var DeleteReservation = function (id) {
                 return false;
         }
     }
-}
+};
 
 var FillReservation = function (id) {
     var allReservations = GetData(ReservationKey);
 
     for (var i = allReservations.length - 1; i >= 0; i--) {
-        if (allReservations[i].id == id) {
+        if (allReservations[i].id === id) {
             var seatConfirm = confirm("Seat the party of " + allReservations[i].seats + "?");
             if (seatConfirm) {
                 var _seatedDateTime = FormatNewDateYMDT();
@@ -286,9 +276,8 @@ var FillReservation = function (id) {
 
                 PostArrayData(FulfilledKey, _newFulFillment);
                 PostData(ReservationKey, allReservations);
-                
-                SelectedTimeFrame = $(":radio:checked");
 
+                SelectedTimeFrame = $(":radio:checked");
                 ListReservations(SelectedTimeFrame.val());
                 ListFulfilled();
             }
@@ -298,18 +287,18 @@ var FillReservation = function (id) {
             }
         }
     }
-}
+};
 
 function ReservationHtml(id, datetime, name, number) {
     var container = $('<div/>', {
-        "class": 'col-xs-12 text-center noPaddingMargins'
+        "class": ResFilContainer
     });
-   
-    var cbCol = "<div class='col-xs-1 ui-state-default ui-corner-left minHeight30 removeRightBorder'><div class='margin0'><input onchange='FillReservation(" + id + ")' type='checkbox' class='form-control input-sm'></div></div>";
-    var numberCol = "<div class='col-xs-1 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>" + number + "</h4></div></div>";
-    var timeCol = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>" + datetime + "</h4></div></div>";
-    var nameCol = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>" + name + "</h4></div></div>"; 
-    var deleteCol = "<div class='col-xs-2 ui-state-default ui-corner-right minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='CancelReservation(" + id + ")'>Cancel</a></div>";
+
+    var cbCol = cbCol1.concat(id, cbCol2);
+    var numberCol = numberCol1.concat(number, numberCol2);
+    var timeCol = timeCol1.concat(datetime, timeCol2);
+    var nameCol = nameCol1.concat(name, nameCol2); 
+    var deleteCol = deleteCol1.concat(id, deleteCol2);
 
     container.append(cbCol);
     container.append(numberCol);
@@ -322,75 +311,78 @@ function ReservationHtml(id, datetime, name, number) {
 
 function FulfilmentHtml(id, seated, datetime, name) {
     var container = $('<div/>', {
-        "class": 'col-xs-12 text-center noPaddingMargins'
+        "class": ResFilContainer
     });
 
-    var cbCol = "<div class='col-xs-2 removeRightBorder'><div class='margin0'>" + seated + "</div></div>";
-    var timeCol = "<div class='col-xs-4 removeRightBorder removeLeftBorder'><div>" + datetime + "</div></div>";
-    var nameCol = "<div class='col-xs-5 removeRightBorder removeLeftBorder'><div>" + name + "</div></div>";
-    var deleteCol = "<div class='col-xs-1 minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='DeleteReservation(" + id + ")'>Delete</a></div>";
-
-    container.append(cbCol);
-    container.append(timeCol);
-    container.append(nameCol);
-    container.append(deleteCol);
+    var cbFCol = cbFCol1.concat(seated, cbFCol2);
+    var timeFCol = timeFCol1.concat(datetime, timeFCol2);
+    var nameFCol = nameFCol1.concat(name, nameFCol2);
+    var deleteFCol = deleteFCol1.concat(id, deleteFCol2);
+    
+    container.append(cbFCol);
+    container.append(timeFCol);
+    container.append(nameFCol);
+    container.append(deleteFCol);
 
     return container;
 }
 
 /* LOCALSTORAGE OPERATIONS */
-var PostData = function (key, Json){
+var PostData = function (key, Json) {
     localStorage.setItem(key, JSON.stringify(Json));
     return key;
-}
+};
 
 var PostArrayData = function (key, Json) {
     var currentReservations = JSON.parse(localStorage.getItem(key) || "[]");
     currentReservations.push(Json);
     localStorage.setItem(key, JSON.stringify(currentReservations));
     return key;
-}
+};
 
 var GetData = function (key) {
     var retrievedData = localStorage.getItem(key);
     return JSON.parse(retrievedData);
-}
+};
 
 var DeleteData = function (key) {
     localStorage.removeItem(key);
-}
+};
 
 /* DATE UTILITIES */
 var StartClock = function () {
     DateTime.text(FormatDateLong() + ' ' + FormatNewTime());
     var t = setTimeout(StartClock, 500);
-}
+};
 
 var FormatNewTime = function () {
     // Returns: HH:MM
-    return (new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); 
-}
+    return (new Date()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
 
 var FormatTime = function (date) {
     // Expected Format date: 2017-08-28T00:48:00.000Z
-    var _date = date.split("-");
-    var dateString = _date[1] + "/" + _date[2].substring(0,_date[2].indexOf('T')) + "/" + _date[0];
+    if (date !== null)
+    {
+        var _date = date.split("-");
+        var dateString = _date[1] + "/" + _date[2].substring(0, _date[2].indexOf('T')) + "/" + _date[0];
 
-    dateString = (new Date(dateString)).toDateString();
+        dateString = (new Date(dateString)).toDateString();
 
-    var timeString = Get12HourTime(date);
+        var timeString = Get12HourTime(date);
 
-    timeString = timeString.startsWith("0") ? timeString.substring(1) : timeString;
-    timeString = timeString.startsWith("0") ? "12" + timeString.substring(1) : timeString; 
+        timeString = timeString.startsWith("0") ? timeString.substring(1) : timeString;
+        timeString = timeString.startsWith("0") ? "12" + timeString.substring(1) : timeString;
 
-    return GetSecondPartString(dateString) + ' ' + timeString
-}
+        return GetSecondPartString(dateString) + ' ' + timeString;
+    }
+};
 
 var FormatDateLong = function () {
     // Returns Format: 2017-08-28T00:48:00.000Z
     var dateString = (new Date()).toDateString();
     return GetSecondPartString(dateString);
-}
+};
 
 var FormatNewDateYMDT = function () {
     // Return Format: MM/DD/YYYY
@@ -403,11 +395,11 @@ var FormatNewDateYMDT = function () {
     var dateString = FormatDateYMDT(_dateString, _hours, _minutes, '');
 
     return dateString;
-}
+};
 
 var FormatDateYMDT = function (date, hours, minutes, ap) {
     // Return Format: 2017-08-28T00:48:00.000Z
-    if (!(date == undefined || date == null || date == NaN))
+    if (!(date === undefined || date === null)) //date == NaN)
     {
         var resDate = date.split("/");
         var compDate = resDate[2] + '-' + PadSingleDigit(resDate[0]) + '-' + PadSingleDigit(resDate[1]);
@@ -416,11 +408,12 @@ var FormatDateYMDT = function (date, hours, minutes, ap) {
         var time = PadSingleDigit(hours) + ":" + PadSingleDigit(minutes);
         return compDate + 'T' + time + timePiece;
     }
-}
+};
 
 function Get12HourTime(datetime) {
     // Expected Format datetime: 2017-08-28T00:48:00.000Z
-    if (datetime == undefined || datetime == null || datetime == NaN)
+    // Return Format: 11:00 AM, 12:00 PM, 7:00 PM 
+    if (datetime === undefined || datetime === null )
         return "";
     var time = datetime.substring(datetime.indexOf('T'));
     var hours = time.substring(1, 3);
@@ -435,12 +428,16 @@ function Get12HourTime(datetime) {
         suffix = " PM";
         hours = 12;
     }
+    else if (hours == 0) {
+        hours = 12;
+    }
     hours += PadSingleDigit(minutes) + suffix;
 
     return hours;
 }
 
 var IsDateTimeValid = function (dateTime) {
+    // Expected format: Any date format
     var matches = dateTime.match(dateIsValidReg);
 
     if (!matches === null) {
@@ -464,9 +461,8 @@ var IsDateTimeValid = function (dateTime) {
             return true;
         }
     }
-
     return false;
-}
+};
 
 /* UTILITIES */
 var SortListDate = function (list) {
@@ -478,7 +474,7 @@ var SortListDate = function (list) {
     sortedReservations.sort();
 
     return sortedReservations;
-}
+};
 
 var IsReservationValid = function () {
     var isValid = true;
@@ -494,8 +490,7 @@ var IsReservationValid = function () {
 
     if (!isValid) return false;
 
-    if (Hours.val().length === 0 || !numericReg.test(Hours.val()))
-    {
+    if (Hours.val().length === 0 || !numericReg.test(Hours.val())) {
         Hours.addClass('warning');
         isValid = false;
     }
@@ -512,27 +507,27 @@ var IsReservationValid = function () {
         isValid = false;
     }
     return isValid;
-}
+};
 
-var GetSecondPartString = function(value) {
+var GetSecondPartString = function (value) {
     return value.match(/^(\S+)\s(.*)/).slice(2);
-}
+};
 
 var PadSingleDigit = function (digit) {
-    return digit.length == 1 ? "0" + digit : digit;
-}
+    return digit.length === 1 ? "0" + digit : digit;
+};
 
-var OnlyNumbericCharacters = (function (inputVal) {
+var OnlyNumbericCharacters = function (inputVal) {
     return !numericReg.test(inputVal);
-});
+};
 
-var NoSpecialCharacters = (function (inputVal) {
+var NoSpecialCharacters = function (inputVal) {
     return !characterReg.test(inputVal);
-});
+};
 
 function FilterById(jsonObject, id) {
     return jsonObject.filter(function (jsonObject) {
-        return (jsonObject['id'] == id);
+        return jsonObject['id'] === id;
     })[0];
 }
 
@@ -572,14 +567,13 @@ $.widget("ui.ampmspinner", $.ui.spinner, {
     _parse: function (value) {
 
         if (typeof value === "string") {
-            return value == 'AM' ? 0 : 1;
+            return value === 'AM' ? 0 : 1;
         }
         return value;
     },
     _format: function (value) {
         return value === 0 ? 'AM' : 'PM';
-    },
-
+    }
 });
 
 $.widget("ui.minutespinner", $.ui.spinner, {
@@ -592,13 +586,13 @@ $.widget("ui.minutespinner", $.ui.spinner, {
     _parse: function (value) {
 
         if (typeof value === "string") {
-            if (value == '00')
+            if (value === '00')
                 return 0;
-            if (value == '15')
+            if (value === '15')
                 return 1;
-            if (value == '30')
+            if (value === '30')
                 return 2;
-            if (value == '45')
+            if (value === '45')
                 return 3;
         }
         return value;
@@ -606,7 +600,7 @@ $.widget("ui.minutespinner", $.ui.spinner, {
     _format: function (value) {
         if (value === 0)
             return '00';
-        else if (value == 1)
+        else if (value === 1)
             return '15';
         else if (value === 2)
             return '30';
@@ -614,7 +608,7 @@ $.widget("ui.minutespinner", $.ui.spinner, {
             return '45';
         else
             return '00';
-    },
+    }
 });
 
 /* VARIABLE DECLARATION */
@@ -622,6 +616,16 @@ var ReservationKey = "Reservations";
 var FulfilledKey = "Fulfilled";
 var ReservationIdKey = "RId";
 var ReservationId = 0;
+var NewReservationLabel = "New Reservation";
+var timePiece = ':00.000Z';
+
+var secondsWeek = 7 * 24 * 60 * 60 * 1000;
+var secondsMonth = 30 * 24 * 60 * 60 * 1000;
+
+var characterReg = /^\s*[a-zA-Z0-9,\s]+\s*$/;
+var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+var dateLongStringReg = /^(19|20)\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+var dateIsValidReg = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
 
 var noDataFound = "<div class='col-xs-12 text-center'><h4><a id='aNewReservation' onclick='NewReservation()'>Create New Reservation</a></h4></div>";
 var headerSeated = "<div class='col-xs-2'><h5 class='boldText'>Seated</h5></div>";
@@ -629,11 +633,28 @@ var headerDate = "<div class='col-xs-4'><h5 class='boldText'>Date/time Seated</h
 var headerName = "<div class='col-xs-5'><h5 class='boldText'>Reservation Name</h5></div";
 var headerEmpty = "<div class='col-xs-1'><h5 class='boldText'>&nbsp;</h5></div>";
 
-var characterReg = /^\s*[a-zA-Z0-9,\s]+\s*$/;
-var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
-var dateLongStringReg = /^(19|20)\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/; 
-var dateIsValidReg = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
-var timePiece = ':00.000Z';
+var ResFilContainer = "col-xs-12 text-center noPaddingMargins";
+var FilContainer = "col-xs-12 text-center boldText";
+
+var cbCol1 = "<div class='col-xs-1 ui-state-default ui-corner-left minHeight30 removeRightBorder'><div class='margin0'><input onchange='FillReservation(";
+var cbCol2 = ")' type='checkbox' class='form-control input-sm'></div></div>";
+var numberCol1 = "<div class='col-xs-1 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>";
+var numberCol2 = "</h4></div></div>";
+var timeCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>";
+var timeCol2 = "</h4></div></div>";
+var nameCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder text-left'><div class='margin5'><h4>";
+var nameCol2 = "</h4></div></div>";
+var deleteCol1 = "<div class='col-xs-2 ui-state-default ui-corner-right minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='CancelReservation(";
+var deleteCol2 = ")'>Cancel</a></div>";
+
+var cbFCol1 = "<div class='col-xs-2 removeRightBorder'><div class='margin0'>";
+var cbFCol2 = "</div></div>";
+var timeFCol1 = "<div class='col-xs-4 removeRightBorder removeLeftBorder'><div>";
+var timeFCol2 = "</div></div>";
+var nameFCol1 = "<div class='col-xs-5 removeRightBorder removeLeftBorder text-left'><div>";
+var nameFCol2 = "</div></div>";
+var deleteFCol1 = "<div class='col-xs-1 minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='DeleteReservation(";
+var deleteFCol2 = ")'>Delete</a></div>";
 
 /* jQuery Objects  */
 var h4Seats = $("#h4Seats");
@@ -651,8 +672,9 @@ var rDate = $("#Date");
 var radioDay = $("#radioDay");
 var radioWeek = $("#radioWeek");
 var radioMonth = $("#radioMonth");
-var DayWeekMonth = $(":radio");
-var SelectedTimeFrame = $(":radio:checked");
 var fulfilledAccordion = $("#fulfilledAccordion");
 var ReservationHeader = $("#ReservationHeader");
+/* Values below will require refreshing when used */
+var DayWeekMonth = $(":radio");
+var SelectedTimeFrame = $(":radio:checked");
 
