@@ -628,33 +628,33 @@ var dateLongStringReg = /^(19|20)\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[
 var dateIsValidReg = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/;
 
 var noDataFound = "<div class='col-xs-12 text-center'><h4><a id='aNewReservation' onclick='NewReservation()'>Create New Reservation</a></h4></div>";
-var headerSeated = "<div class='col-xs-2'><h5 class='boldText'>Seated</h5></div>";
-var headerDate = "<div class='col-xs-4'><h5 class='boldText'>Date/time Seated</h5></div>";
-var headerName = "<div class='col-xs-5'><h5 class='boldText'>Reservation Name</h5></div";
-var headerEmpty = "<div class='col-xs-1'><h5 class='boldText'>&nbsp;</h5></div>";
+var headerSeated = "<div class='col-xs-1'><h5 class='boldText'>Seated</h5></div>";
+var headerDate = "<div class='col-xs-5'><h5 class='boldText'>Date/time Seated</h5></div>";
+var headerName = "<div class='col-xs-5 col-xs-offset-1'><h5 class='boldText'>Reservation Name</h5></div";
+var headerEmpty = "</h5></div>";
+//var headerEmpty = "<div class='col-xs-1'><h5 class='boldText'>&nbsp;</h5></div>";
+var cbFCol1 = "<div class='col-xs-2 removeRightBorder'><div class='margin0'>";
+var cbFCol2 = "</div></div>";
+var timeFCol1 = "<div class='col-xs-4 removeRightBorder removeLeftBorder'><div>";
+var timeFCol2 = "</div></div>";
+var nameFCol1 = "<div class='col-xs-4 removeRightBorder removeLeftBorder text-left'><div>";
+var nameFCol2 = "</div></div>";
+var deleteFCol1 = "<div class='col-xs-2 minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='DeleteReservation(";
+var deleteFCol2 = ")'>Delete</a></div>";
 
 var ResFilContainer = "col-xs-12 text-center noPaddingMargins";
 var FilContainer = "col-xs-12 text-center boldText";
 
 var cbCol1 = "<div class='col-xs-1 ui-state-default ui-corner-left minHeight30 removeRightBorder'><div class='margin0'><input onchange='FillReservation(";
 var cbCol2 = ")' type='checkbox' class='form-control input-sm'></div></div>";
-var numberCol1 = "<div class='col-xs-1 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>";
+var numberCol1 = "<div class='col-xs-1 ui-state-default removeRightBorder removeLeftBorder minHeight30'><div class='margin5'><h4>";
 var numberCol2 = "</h4></div></div>";
-var timeCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder'><div class='margin5'><h4>";
+var timeCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder minHeight30'><div class='margin5'><h4>";
 var timeCol2 = "</h4></div></div>";
-var nameCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder text-left'><div class='margin5'><h4>";
+var nameCol1 = "<div class='col-xs-4 ui-state-default removeRightBorder removeLeftBorder text-left minHeight30'><div class='margin5'><h4>";
 var nameCol2 = "</h4></div></div>";
 var deleteCol1 = "<div class='col-xs-2 ui-state-default ui-corner-right minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='CancelReservation(";
 var deleteCol2 = ")'>Cancel</a></div>";
-
-var cbFCol1 = "<div class='col-xs-2 removeRightBorder'><div class='margin0'>";
-var cbFCol2 = "</div></div>";
-var timeFCol1 = "<div class='col-xs-4 removeRightBorder removeLeftBorder'><div>";
-var timeFCol2 = "</div></div>";
-var nameFCol1 = "<div class='col-xs-5 removeRightBorder removeLeftBorder text-left'><div>";
-var nameFCol2 = "</div></div>";
-var deleteFCol1 = "<div class='col-xs-1 minHeight30 removeLeftBorder text-left text-danger'><a class='btn' onclick='DeleteReservation(";
-var deleteFCol2 = ")'>Delete</a></div>";
 
 /* jQuery Objects  */
 var h4Seats = $("#h4Seats");
