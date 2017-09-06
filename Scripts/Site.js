@@ -4,12 +4,43 @@
 /* Reservation / FulFilled Data localStorage:
     KEY = Reservations / FulFilled
     JSON = { id: N, datetime: DateTime, seats: N, name: "John Doe", seated: false } */
+/* jQuery Objects  */
+var arrowUp = $("#arrowUp");
+var arrowDown = $("#arrowDown");
+var divNameColumn = $("#divNameColumn");
+var h4NameColumn = $("#h4NameColumn");
+var divSeatsColumn = $("#divSeatsColumn");
+var FulFillLink = $("#FulFillLink");
+var tabs = $('#tabRF');
+var divTimeColumn = $("#divTimeColumn");
+var h4Time = $("#h4Time");
+var h4Seats = $("#h4Seats");
+var DateTime = $("#DateTime");
+var NewReservationBtn = $("#NewReservation");
+var divReservations = $("#divReservations");
+var divFulfilled = $("#divFulfilled");
+var divReservation = $("#divReservation");
+var Hours = $("#Hours");
+var Minutes = $("#Minutes");
+var AmPm = $("#AmPm");
+var Name = $("#Name");
+var Seats = $("#Seats");
+var rDate = $("#Date");
+var radioDay = $("#radioDay");
+var radioWeek = $("#radioWeek");
+var radioMonth = $("#radioMonth");
+var fulfilledAccordion = $("#fulfilledAccordion");
+var ReservationHeader = $("#ReservationHeader");
+/* Values below will require refreshing when used */
+var DayWeekMonth = $(":radio");
+var SelectedTimeFrame = $(":radio:checked");
 
 $(document).ready(function () {
     StartClock();
 
     NewReservationBtn.on("click", NewReservation);
     FulFillLink.on("click", ListFulfilled(SelectedTimeFrame.val()));
+    
     tabs.tabs();
     Seats.spinner({
         change: function () {
@@ -61,6 +92,8 @@ $(document).ready(function () {
     ReservationId = GetCurrentRId();
     ListReservations(DayWeekMonth.val());
     //ListFulfilled();
+    
+    $("#arrowDown").detach();
 });
 
 /* INFRASTRUCTURE */
@@ -107,6 +140,135 @@ var NewReservation = function () {
             ]
         });
 };
+
+/* h4Seats.click(function () {
+    if(divSeatsColumn.find(arrowUp).length > 0)
+    {
+        SortReservations("seats", "down");
+        h4Seats.append(arrowDown); 
+        arrowUp.detach();          
+    }
+    else if (divSeatsColumn.find(arrowDown).length > 0)
+    {
+        SortReservations("seats", "up");
+        h4Seats.append(arrowUp);
+        arrowDown.detach();
+    }
+    else
+    {
+        SortReservations("seats", "up"); 
+        h4Seats.append(arrowUp); 
+        arrowDown.detach();     
+    }
+}); */
+
+h4Time.click(function () {
+    if(divTimeColumn.find(arrowUp).length > 0)
+    {
+        SortReservations("datetime", "down");
+        h4Time.append(arrowDown); 
+        arrowUp.detach();          
+    }
+    else if (divTimeColumn.find(arrowDown).length > 0)
+    {
+        SortReservations("datetime", "up");
+        h4Time.append(arrowUp);
+        arrowDown.detach();
+    }
+    else
+    {
+        SortReservations("datetime", "up"); 
+        h4Time.append(arrowUp); 
+        arrowDown.detach();     
+    }
+});
+
+h4NameColumn.click(function () {
+    if(divNameColumn.find(arrowUp).length > 0)
+    {
+        SortReservations("name", "down");
+        h4NameColumn.append(arrowDown); 
+        arrowUp.detach();          
+    }
+    else if (divNameColumn.find(arrowDown).length > 0)
+    {
+        SortReservations("name", "up");
+        h4NameColumn.append(arrowUp);
+        arrowDown.detach();
+    }
+    else
+    {
+        SortReservations("name", "up"); 
+        h4NameColumn.append(arrowUp); 
+        arrowDown.detach();     
+    }
+});
+
+var SortReservations = function(column, direction){
+    var allReservations = GetData(ReservationKey);
+    var sortedReservations = SortList(column, direction);
+    var todaysSeatCount = 0;
+
+    if (sortedReservations !== null) {
+        divReservations.empty(); // Empty the html control
+
+        var hasData = false;
+        for (var i = 0; sortedReservations.length > i; i++) {
+
+            var _reservation = allReservations.find(function (reservation) {
+                if (reservation.id === sortedReservations[i][1])
+                    return reservation;
+            });
+
+            var reservationDate = new Date(_reservation.datetime);
+            var date = new Date();
+            SelectedTimeFrame = $(":radio:checked");
+
+            if (!_reservation.seated) {
+                var formattedYYYMMDDTHHMMTT = FormatTime(_reservation.datetime);
+                switch (SelectedTimeFrame.val()) {
+                    case "day":
+                        if (reservationDate.toDateString() === date.toDateString()) {
+                            var container = ReservationHtml(_reservation.id, Get12HourTime(_reservation.datetime), _reservation.name, _reservation.seats);
+                            divReservations.append(container);
+                            hasData = true;
+                            todaysSeatCount += Number(_reservation.seats);
+                        }
+                        break;
+                    case "week":
+                        if (reservationDate <= new Date(date.getTime() + secondsWeek)) {
+                            var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                            divReservations.append(container);
+                            hasData = true;
+                        }
+                        break;
+                    case "month":
+                        if (reservationDate <= new Date(date.getTime() + secondsMonth)) {
+                            var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                            divReservations.append(container);
+                            hasData = true;
+                        }
+                        break;
+                    case "all":
+                        var container = ReservationHtml(_reservation.id, formattedYYYMMDDTHHMMTT, _reservation.name, _reservation.seats);
+                        divReservations.append(container);
+                        hasData = true;
+                        break;
+                    default:
+                }
+            }
+        }
+
+        if (!hasData) {
+            divReservations.append(noDataFound);
+            ReservationHeader.addClass("hidden");
+        }
+        else 
+            ReservationHeader.removeClass("hidden");
+
+        todaysSeatCount > 0 ? h4Seats.text("Seats (" + todaysSeatCount + ")") : h4Seats.text("Seats");
+    }
+}
 
 var ListReservations = function (listType) {
     var allReservations = GetData(ReservationKey);
@@ -496,6 +658,37 @@ var IsDateTimeValid = function (dateTime) {
 };
 
 /* UTILITIES */
+var SortList = function(sortColumn, direction) {
+    var list = GetData(ReservationKey);
+    var sorted = [];
+    for (var i = 0; list.length > i; i++) {
+        var _item = list[i];
+        switch(sortColumn)
+        {
+            case "name":
+                sorted.push([_item.name, _item.id]);
+                break;
+            case "seats":
+                sorted.push([Number(_item.seats), _item.id]);
+                break;
+            case "datetime": 
+                var cleanValue = (_item.datetime.replace(/[^\w\s]/gi, '')).replace(/\D/g,'');     
+                sorted.push([cleanValue.substring(0, cleanValue.length -1), _item.id]);
+                break;
+        }       
+    }
+    var sortedList = sorted.sort();
+
+    if(direction === "down" )
+        sortedList = sorted.reverse();
+
+    return sortedList;
+};
+
+function sortNumber(a,b) {
+    return Number(a) - Number(b);
+}
+
 var SortListDate = function (list) {
     var sortedReservations = [];
     for (var i = 0; list.length > i; i++) {
@@ -687,27 +880,5 @@ var nameCol2 = "</h4></div></div>";
 var deleteCol1 = "<div class='col-xs-2 ui-state-default ui-corner-right minHeight30 borderNone text-left text-danger'><a class='btn' onclick='CancelReservation(";
 var deleteCol2 = ")'>Cancel</a></div>";
 
-/* jQuery Objects  */
-var FulFillLink = $("#FulFillLink");
-var tabs = $('#tabRF');
-var h4Seats = $("#h4Seats");
-var DateTime = $("#DateTime");
-var NewReservationBtn = $("#NewReservation");
-var divReservations = $("#divReservations");
-var divFulfilled = $("#divFulfilled");
-var divReservation = $("#divReservation");
-var Hours = $("#Hours");
-var Minutes = $("#Minutes");
-var AmPm = $("#AmPm");
-var Name = $("#Name");
-var Seats = $("#Seats");
-var rDate = $("#Date");
-var radioDay = $("#radioDay");
-var radioWeek = $("#radioWeek");
-var radioMonth = $("#radioMonth");
-var fulfilledAccordion = $("#fulfilledAccordion");
-var ReservationHeader = $("#ReservationHeader");
-/* Values below will require refreshing when used */
-var DayWeekMonth = $(":radio");
-var SelectedTimeFrame = $(":radio:checked");
+
 
