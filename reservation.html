@@ -17,36 +17,49 @@
             <div class="col-xs-1"><h4>&nbsp;</h4></div>
             <div class="col-xs-7 text-center">
                 <label for="radioDay">Today</label>
-                <input type="radio" value="day" name="radioDate" id="radioDay" checked="checked" onchange="ListReservations($(this).val())" />
+                <input type="radio" value="day" name="radioDate" id="radioDay" checked="checked" onchange="ListReservations($(this).val()); ListFulfilled($(this).val());" />
                 <label for="radioWeek">7 days</label>
-                <input type="radio" value="week" name="radioDate" id="radioWeek" onchange="ListReservations($(this).val())" />
+                <input type="radio" value="week" name="radioDate" id="radioWeek" onchange="ListReservations($(this).val()); ListFulfilled($(this).val());" />
                 <label for="radioMonth">30 days</label>
-                <input type="radio" value="month" name="radioDate" id="radioMonth" onchange="ListReservations($(this).val())" />
+                <input type="radio" value="month" name="radioDate" id="radioMonth" onchange="ListReservations($(this).val()); ListFulfilled($(this).val());" />
                 <label for="radioAll">All</label>
-                <input type="radio" value="all" name="radioDate" id="radioAll" onchange="ListReservations($(this).val())" />
+                <input type="radio" value="all" name="radioDate" id="radioAll" onchange="ListReservations($(this).val()); ListFulfilled($(this).val());" />
             </div>
             <div class="col-xs-2 text-center"><h4 id="DateTime">DateTime</h4></div>
         </div>
-        <div class="main">
-            <div id="ReservationHeader" class="col-xs-12 text-center">
-                <div class="col-xs-1"><h4 class="paddingLeft10">Fill</h4></div>
-                <div class="col-xs-2"><h4 id="h4Seats">Seats</h4></div>
-                <div class="col-xs-2"><h4>Time</h4></div>
-                <div class="col-xs-5"><h4>Name</h4></div>
-                <div class="col-xs-2"><h4>&nbsp;</h4></div>
+        <div id="tabRF" class="main">
+            <ul>
+                <li><a href="#tabReservation">Reservations</a></li>
+                <li><a id="FulFillLink" href="#fulfilledAccordion">Fulfilled</a></li>
+            </ul>
+            <div id="tabReservation">
+                <div id="ReservationHeader" class="col-xs-12 text-center">
+                        <div class="col-xs-1"><h4 class="paddingLeft10">Fill</h4></div>
+                        <div class="col-xs-2"><h4 id="h4Seats">Seats</h4></div>
+                        <div class="col-xs-2"><h4>Time</h4></div>
+                        <div class="col-xs-5"><h4>Name</h4></div>
+                        <div class="col-xs-2"><h4>&nbsp;</h4></div>
+                    </div>
+                    <div style="padding: 15px;">
+                        <table class="col-xs-12" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <div id="divReservations" class="col-xs-12"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
             </div>
-            <div style="padding: 15px;">
+            <div id="fulfilledAccordion" class="col-xs-12">
+                <!-- <h3>Fulfilled Reservations</h3> -->
                 <table class="col-xs-12" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                        <td>
-                            <div id="divReservations" class="col-xs-12"></div>
-                        </td>
-                    </tr>
-                </table>
-                <div id="fulfilledAccordion" class="col-xs-12">
-                    <h3>Fulfilled Reservations</h3>
-                    <div id="divFulfilled" class="noPaddingMargins"></div>
-                </div>
+                        <tr>
+                            <td>
+                                <div id="divFulfilled" class="noPaddingMargins"></div>
+                            </td>
+                        </tr>
+                    </table>
+                
             </div>
         </div>
     </div> 
