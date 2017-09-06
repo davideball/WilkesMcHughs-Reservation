@@ -50,6 +50,9 @@ body {
 td {
     max-height: 20px;
 }
+.borderNone {
+    border: none !important;
+}
 .noPaddingMargins {
     padding: 0px;
     margin: 0px;
